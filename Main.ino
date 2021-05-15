@@ -1,22 +1,53 @@
+// Project: Breathing Machine Relays
+//
+//
+//
+//=========================================
+
+// Global Variables
+//==================
+// valvePins are used for the Breathing Machine Relays
 int valvePins[5]    = {5, 6, 7, 8, 9};
+
+// Delay Array is how long to wait for each cycle
+// valules are in Milliseconds
+// example: 4000 Milliseconds = 4 seconds
 int DelayArray[5]   = {0, 1000, 4000, 450, 700};
-// If there is a 1 in this array then the pin turns HIGH, if 0 then the pin turns LOW.
+
+// Relay Triggers
+//===================
+// There are 3 Main Relays
+//
+
+#define ON HIGH
+#define OFF LOW
+
 bool triggerArray[8][3] = {
-  {1, 1, 1},              //Test all relays.
-  {1, 0, 0},              //Sieve A Charge / Sieve B Purge
-  {1, 0, 1},              //Sieve A Charge / Sieve B Purge / Flush/PreCharge
-  {1, 1, 1},              //Sieve A Charge / Sieve B Charge / Flush/PreCharge
-  {0, 1, 0},              //Sieve A Purge / Sieve B Charge
-  {0, 1, 1},              //Sieve A Purge / Sieve B Charge / Flush/PreCharge
-  {1, 1, 1},              //Sieve A Charge / Sieve B Charge / Flush/PreCharge
-  {0, 0, 0}               //all off
+  {ON,  ON,  ON},   // Test all relays.
+  {ON,  OFF, OFF},  // Sieve A Charge / Sieve B Purge
+  {ON,  OFF, ON},   // Sieve A Charge / Sieve B Purge / Flush/PreCharge
+  {ON,  ON,  ON},   // Sieve A Charge / Sieve B Charge / Flush/PreCharge
+  {OFF, ON,  OFF},  // Sieve A Purge / Sieve B Charge
+  {OFF, ON,  ON},   // Sieve A Purge / Sieve B Charge / Flush/PreCharge
+  {ON,  ON,  ON},   // Sieve A Charge / Sieve B Charge / Flush/PreCharge
+  {OFF, OFF, OFF}   // All Off
 };
-char *message[] = {" left void", "Sieve A Charge / Sieve B Purge", "Sieve A Charge / Sieve B Purge / Flush/PreCharge",
-                   "Sieve A Charge / Sieve B Charge / Flush/PreCharge", "Sieve A Purge / Sieve B Charge",
-                   "Sieve A Purge / Sieve B Charge / Flush/PreCharge", "Sieve A Charge / Sieve B Charge / Flush/PreCharge"
-                  };
-void setup()
-{
+
+// Messages for each Cycle
+//==========================
+char *message[] = {
+  "",
+  "Sieve A Charge / Sieve B Purge",
+  "Sieve A Charge / Sieve B Purge / Flush/PreCharge",
+  "Sieve A Charge / Sieve B Charge / Flush/PreCharge",
+  "Sieve A Purge / Sieve B Charge",
+  "Sieve A Purge / Sieve B Charge / Flush/PreCharge",
+  "Sieve A Charge / Sieve B Charge / Flush/PreCharge"
+};
+
+// Main Setup
+//================
+void setup() {
   Serial.begin(9600);
   for (int i = 0; i < 5; i++) {
     pinMode(valvePins[i], OUTPUT);
@@ -27,24 +58,33 @@ void setup()
   digitalWrite(8, HIGH);
   Serial.println("Fan Switched On");
 }
+
+// Main Loop
+//===========
 void loop() {
-  //cycle 1 called 1 is for the first part of the triggerArray,
-  //the 2 is the delay that is needed to be used.DelayArray 2 = 4000.
-  cycler(1, 2);    //cycle 2, delay 3/
-  cycler(2, 3);    //cycle 2, delay 3/
-  cycler(3, 4);    // cycle 3
-  cycler(4, 2);    //cycle 4
-  cycler(5, 3);    //cycle 5
-  cycler(6, 4);    //cycle 6
+  cycler(1, 2);  // cycle 1, delay 2/
+  cycler(2, 3);  // cycle 2, delay 3/
+  cycler(3, 4);  // cycle 3, delay 4/
+  cycler(4, 2);  // cycle 4, delay 2/
+  cycler(5, 3);  // cycle 5, delay 3/
+  cycler(6, 4);  // cycle 6, delay 4/
 }
+
+// Functions
+// ================
+//
+
+// Function: cycler
+//--------------------------
+// Cycler uses 2 parameters
+// parameter 1 = cycle number
+// parameter 2 = points to which delay to use
+// for example DelayArray item 2 = 4000 Milliseconds = 4 Seconds
 void cycler(int call, int hold) {
   Serial.println(message[call]);
   for (int i = 0; i < 3; i++) {
-    if (triggerArray[call][i] == 1) {
-      digitalWrite(valvePins[i], HIGH);
-    } else {
-      digitalWrite(valvePins[i], LOW);
-    }
+    int onOrOff=(triggerArray[call][i] == ON);
+    digitalWrite(valvePins[i], onOrOff);
   }
   delay(DelayArray[hold]);
 }
