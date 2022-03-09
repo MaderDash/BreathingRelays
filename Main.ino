@@ -23,14 +23,14 @@ int valvePins[5]    = {5, 6, 7, 8, 9};
 #define OFF LOW
  
 int triggerArray[8][4] = {
-  {ON,  ON,  ON,    0},   // Test all relays.
-  {ON,  OFF, OFF,   4000},  // Sieve A Charge / Sieve B Purge
-  {ON,  OFF, ON,    450},   // Sieve A Charge / Sieve B Purge / Flush/PreCharge
-  {ON,  ON,  ON,    700},   // Sieve A Charge / Sieve B Charge / Flush/PreCharge
-  {OFF, ON,  OFF,   4000},  // Sieve A Purge / Sieve B Charge
-  {OFF, ON,  ON,    450},   // Sieve A Purge / Sieve B Charge / Flush/PreCharge
-  {ON,  ON,  ON,    700},   // Sieve A Charge / Sieve B Charge / Flush/PreCharge
-  {OFF, OFF, OFF,   1000}   // All Off
+  {ON,  ON,  ON,    0   },   // Test all relays.
+  {ON,  OFF, OFF,   4000},   // Sieve A Charge / Sieve B Purge
+  {ON,  OFF, ON,    450 },   // Sieve A Charge / Sieve B Purge / Flush/PreCharge
+  {ON,  ON,  ON,    700 },   // Sieve A Charge / Sieve B Charge / Flush/PreCharge
+  {OFF, ON,  OFF,   4000},   // Sieve A Purge / Sieve B Charge
+  {OFF, ON,  ON,    450 },   // Sieve A Purge / Sieve B Charge / Flush/PreCharge
+  {ON,  ON,  ON,    700 },   // Sieve A Charge / Sieve B Charge / Flush/PreCharge
+  {OFF, OFF, OFF,   1000}    // All Off
 };
  
 // Messages for each Cycle
@@ -72,11 +72,6 @@ void loop() {
   cycler(5);  // cycle 5, delay 3/
   cycler(6);  // cycle 6, delay 4/
 }
- 
-// Functions
-// ================
-//
- 
 // Function: cycler
 //--------------------------
 // Cycler uses 2 parameters
